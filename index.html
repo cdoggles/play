@@ -111,16 +111,6 @@ if ('serviceWorker' in navigator) {
 	});
 }
 </script>
-<style>
-#turn-sideways { display: none; position: fixed; inset: 0; z-index: 1000; background: #000000;
-  color: #FCFCFC; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
-  font: 600 20px/1.3 ui-rounded, system-ui, sans-serif; text-align: center; }
-#turn-sideways .phone { width: 46px; height: 80px; border: 6px solid #F878F8; border-radius: 10px;
-  box-sizing: border-box; animation: tip-over 2.4s ease-in-out infinite; }
-#turn-sideways .sparkle { color: #F8D878; }
-@keyframes tip-over { 0%, 25% { transform: rotate(0deg); } 55%, 100% { transform: rotate(-90deg); } }
-@media (orientation: portrait) and (pointer: coarse) { #turn-sideways { display: flex; } }
-</style>
 </head>
 	<body>
 		<canvas id="canvas">
@@ -139,7 +129,7 @@ if ('serviceWorker' in navigator) {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":330868,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"index.service.worker.js"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":333564,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"index.service.worker.js"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -243,9 +233,7 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script>
-	<div id="turn-sideways"><div class="phone"></div>
-<div><span class="sparkle">&#10022;</span> Turn your phone sideways <span class="sparkle">&#10022;</span></div></div>
-<script>
+	<script>
 document.addEventListener('pointerdown', () => {
 	if (screen.orientation && screen.orientation.lock) {
 		screen.orientation.lock('landscape').catch(() => {});
