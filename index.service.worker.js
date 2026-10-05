@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1791182579|922064';
+const CACHE_VERSION = '1791184112|946909';
 /** @type {string} */
 const CACHE_PREFIX = 'Untitled Game-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
@@ -26,14 +26,19 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-	event.waitUntil(caches.keys().then(
-		function (keys) {
-			// Remove old caches.
-			return Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map((key) => caches.delete(key)));
+	event.waitUntil(caches.keys().then(async (keys) => {
+		// Remove old caches. If there were any, this is a new build: take over the open game and
+		// reload it, so it doesn't keep running the old one.
+		const old = keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME);
+		await Promise.all(old.map((key) => caches.delete(key)));
+		await self.clients.claim();
+		if ('navigationPreload' in self.registration) {
+			await self.registration.navigationPreload.enable();
 		}
-	).then(() => self.clients.claim()).then(function () {
-		// Enable navigation preload if available.
-		return ('navigationPreload' in self.registration) ? self.registration.navigationPreload.enable() : Promise.resolve();
+		if (old.length > 0) {
+			const windows = await self.clients.matchAll({ type: 'window' });
+			windows.forEach((client) => client.navigate && client.navigate(client.url).catch(() => {}));
+		}
 	}));
 });
 
